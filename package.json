@@ -1,0 +1,23 @@
+{
+  "name": "gulasadar",
+  "version": "1.0.0",
+  "description": "GulaSadar - aplikasi web pencegahan diabetes: pantau jatah gula harian, kenali makanan, cek risiko, dan tanya Sobat Gula.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "start": "bun run src/server.js",
+    "dev": "bun --watch run src/server.js",
+    "test": "bun test"
+  },
+  "engines": {
+    "bun": ">=1.1.0"
+  },
+  "module": "index.ts",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^7"
+  }
+}

@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GulaSadar - kenali gula di piringmu</title>
+  <meta name="description" content="Aplikasi pencegahan diabetes: pantau jatah gula harian, kenali makanan, cek risiko, dan tanya Sobat Gula.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Lewati ke konten</a>
+  <div class="shell">
+    <nav class="nav" aria-label="Menu utama">
+      <div class="brand">
+        <svg viewBox="0 0 40 40" width="34" height="34" aria-hidden="true"><ellipse cx="20" cy="14" rx="10" ry="8.5" fill="#F0D9B5"/><rect x="18" y="21" width="4" height="15" rx="2" fill="#F0D9B5"/></svg>
+        <span>GulaSadar</span>
+      </div>
+      <button class="nav-btn" data-tab="beranda">Beranda</button>
+      <button class="nav-btn" data-tab="pindai">Pindai makanan</button>
+      <button class="nav-btn" data-tab="risiko">Cek risiko</button>
+      <button class="nav-btn" data-tab="sobat">Sobat Gula</button>
+      <button class="nav-btn" data-tab="darah">Gula darah</button>
+      <p class="nav-note">Alat edukasi, bukan pengganti dokter.</p>
+    </nav>
+
+    <main id="main" tabindex="-1">
+
+      <!-- BERANDA -->
+      <section id="tab-beranda" class="tab" aria-labelledby="h-beranda">
+        <div class="hero">
+          <div id="spoons" class="spoons" role="img" aria-label="Jatah gula harian"></div>
+          <div class="hero-text">
+            <h1 id="h-beranda">Jatah gula hari ini</h1>
+            <p id="heroKalimat" class="hero-kalimat">Memuat...</p>
+            <p id="heroCatatan" class="muted"></p>
+            <p id="streak" class="streak"></p>
+            <button class="btn primary" data-goto="pindai">Catat makanan</button>
+          </div>
+        </div>
+        <div class="split">
+          <section aria-labelledby="h-log">
+            <h2 id="h-log">Catatan hari ini</h2>
+            <ul id="logList" class="log"></ul>
+            <p id="logEmpty" class="empty" hidden>Belum ada catatan. Mulai dari sarapanmu: ketuk "Catat makanan".</p>
+            <p id="alamiNote" class="muted"></p>
+          </section>
+          <section aria-labelledby="h-minggu">
+            <h2 id="h-minggu">Tujuh hari terakhir</h2>
+            <div id="weekChart"></div>
+            <p class="muted">Garis putus-putus adalah batas 50 g gula tambahan per hari (anjuran Kemenkes).</p>
+          </section>
+        </div>
+      </section>
+
+      <!-- PINDAI -->
+      <section id="tab-pindai" class="tab" aria-labelledby="h-pindai" hidden>
+        <h1 id="h-pindai">Kenali gula di piringmu</h1>
+        <div class="seg" role="group" aria-label="Cara memindai">
+          <button class="seg-btn" data-mode="ketik" aria-pressed="true">Ketik nama</button>
+          <button class="seg-btn" data-mode="foto" aria-pressed="false">Foto makanan</button>
+          <button class="seg-btn" data-mode="label" aria-pressed="false">Label kemasan</button>
+        </div>
+
+        <div id="mode-ketik" class="panel">
+          <label for="q">Nama makanan atau minuman</label>
+          <input id="q" type="search" autocomplete="off" placeholder="mis. es teh manis, martabak, nasi goreng">
+          <ul id="hasilCari" class="hasil"></ul>
+        </div>
+
+        <div id="mode-foto" class="panel" hidden>
+          <p id="fotoInfo" class="muted"></p>
+          <label for="fileFoto">Pilih atau ambil foto makanan</label>
+          <input id="fileFoto" type="file" accept="image/*">
+          <img id="fotoPreview" class="preview" alt="Pratinjau foto makanan" hidden>
+          <div><button id="btnKenali" class="btn primary" type="button" disabled>Kenali makanan</button></div>
+          <p id="fotoStatus" role="status" class="muted"></p>
+          <ul id="hasilFoto" class="hasil"></ul>
+        </div>
+
+        <form id="formLabel" class="panel" hidden>
+          <p class="muted">Lihat tabel informasi nilai gizi di kemasan, cari baris "Gula" pada takaran saji.</p>
+          <label for="labelNama">Nama produk (opsional)</label>
+          <input id="labelNama" type="text" maxlength="80" placeholder="mis. susu cokelat kotak">
+          <div class="row2">
+            <div><label for="labelGula">Gula per sajian (g)</label><input id="labelGula" type="number" min="0" max="500" step="0.1" required></div>
+            <div><label for="labelSajian">Jumlah sajian yang kamu konsumsi</label><input id="labelSajian" type="number" min="0.25" max="20" step="0.25" value="1" required></div>
+          </div>
+          <button class="btn primary" type="submit">Hitung</button>
+        </form>
+
+        <div id="detail" class="detail" hidden aria-live="polite"></div>
+      </section>
+
+      <!-- RISIKO -->
+      <section id="tab-risiko" class="tab" aria-labelledby="h-risiko" hidden>
+        <h1 id="h-risiko">Cek risiko diabetes</h1>
+        <p class="lead">Sepuluh pertanyaan singkat, diadaptasi dari kuesioner FINDRISC. Hasilnya gambaran awal, bukan diagnosis.</p>
+        <form id="formRisiko" class="panel">
+          <div class="row3">
+            <div><label for="rUmur">Umur (tahun)</label><input id="rUmur" name="umur" type="number" min="18" max="110" required></div>
+            <div><label for="rTinggi">Tinggi badan (cm)</label><input id="rTinggi" name="tinggiCm" type="number" min="100" max="230" required></div>
+            <div><label for="rBerat">Berat badan (kg)</label><input id="rBerat" name="beratKg" type="number" min="25" max="300" step="0.1" required></div>
+          </div>
+          <div class="row3">
+            <div><label for="rPinggang">Lingkar pinggang (cm)</label><input id="rPinggang" name="pinggangCm" type="number" min="40" max="200" required></div>
+            <div><label for="rJk">Jenis kelamin</label>
+              <select id="rJk" name="jenisKelamin" required><option value="">Pilih</option><option value="L">Laki-laki</option><option value="P">Perempuan</option></select></div>
+            <div><label for="rKeluarga">Riwayat diabetes di keluarga</label>
+              <select id="rKeluarga" name="riwayatKeluarga">
+                <option value="tidak">Tidak ada</option>
+                <option value="kerabat">Kakek-nenek, paman-bibi</option>
+                <option value="keluarga_inti">Orang tua, saudara, atau anak</option>
+              </select></div>
+          </div>
+          <fieldset>
+            <legend>Kebiasaan dan riwayat kesehatan</legend>
+            <label class="cek"><input type="checkbox" name="aktifFisik"> Aktif bergerak minimal 30 menit hampir setiap hari</label>
+            <label class="cek"><input type="checkbox" name="sayurBuahHarian"> Makan sayur atau buah setiap hari</label>
+            <label class="cek"><input type="checkbox" name="obatHipertensi"> Sedang atau pernah minum obat tekanan darah tinggi</label>
+            <label class="cek"><input type="checkbox" name="gulaDarahTinggi"> Pernah diberi tahu gula darahku tinggi</label>
+          </fieldset>
+          <button class="btn primary" type="submit">Lihat hasil</button>
+          <p id="risikoError" class="error" role="alert"></p>
+        </form>
+        <div id="risikoHasil" class="detail" hidden aria-live="polite"></div>
+      </section>
+
+      <!-- SOBAT GULA -->
+      <section id="tab-sobat" class="tab" aria-labelledby="h-sobat" hidden>
+        <h1 id="h-sobat">Sobat Gula</h1>
+        <p id="modeChat" class="muted"></p>
+        <div id="chatLog" class="chat" aria-live="polite"></div>
+        <div id="chips" class="chips"></div>
+        <form id="formChat" class="chat-form">
+          <label for="chatInput" class="sr">Pesan untuk Sobat Gula</label>
+          <input id="chatInput" type="text" maxlength="1000" autocomplete="off" placeholder="Tanyakan soal gula, makanan, atau pencegahan diabetes">
+          <button class="btn primary" type="submit">Kirim</button>
+        </form>
+        <p class="muted small">Sobat Gula memberi edukasi umum. Untuk diagnosis, obat, dan dosis, tanyakan ke dokter atau apoteker.</p>
+      </section>
+
+      <!-- GULA DARAH -->
+      <section id="tab-darah" class="tab" aria-labelledby="h-darah" hidden>
+        <h1 id="h-darah">Catatan gula darah</h1>
+        <p class="lead">Simpan hasil cek gula darahmu dan lihat polanya dari waktu ke waktu.</p>
+        <form id="formDarah" class="panel">
+          <div class="row2">
+            <div><label for="gNilai">Hasil (mg/dL)</label><input id="gNilai" type="number" min="20" max="600" required></div>
+            <div><label for="gKonteks">Waktu pengukuran</label>
+              <select id="gKonteks"><option value="puasa">Puasa (8 jam tidak makan)</option><option value="sesudah_makan">2 jam setelah makan</option><option value="sewaktu">Sewaktu</option></select></div>
+          </div>
+          <button class="btn primary" type="submit">Simpan</button>
+        </form>
+        <div id="glukosaHasil" class="detail" hidden aria-live="polite"></div>
+        <div id="glukosaChart"></div>
+        <ul id="glukosaList" class="log"></ul>
+        <p id="glukosaEmpty" class="empty" hidden>Belum ada catatan gula darah.</p>
+      </section>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
